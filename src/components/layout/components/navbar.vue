@@ -31,9 +31,9 @@
       </div>
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item>
-            <router-link :to="{ name: 'SelectAppid' }" :underline="false">切换公众号</router-link>
-          </el-dropdown-item>
+<!--          <el-dropdown-item>-->
+<!--            <router-link :to="{ name: 'SelectAppid' }" :underline="false">切换公众号</router-link>-->
+<!--          </el-dropdown-item>-->
 
           <el-dropdown-item divided>
             <router-link :to="{ name: 'ChangePassword' }" :underline="false">修改密码</router-link>

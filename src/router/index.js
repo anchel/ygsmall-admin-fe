@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import { components } from '@/router/asyncRouter'
 
+import OrderPaidList from '@/views/order/PaidList/PaidList.vue'
+
 const Components = Object.assign({}, components, {
   Layout: () => import('@/components/layout/index.vue'),
   LayoutSystem: () => import('@/components/layout/layout-system.vue'),
@@ -15,116 +17,41 @@ export const allowRouter = [
     name: 'HomeRoot',
     path: '/',
     component: Components['Layout'],
-    redirect: '/home',
+    redirect: '/order/paid/list',
     meta: { title: '首页', icon: 'el-icon-eleme' },
-    children: [
-      {
-        name: 'Home',
-        path: '/home',
-        component: Components['workplace'],
-        meta: { title: '首页', icon: 'el-icon-house' },
-      },
-    ],
+    // children: [
+    //   {
+    //     name: 'Home',
+    //     path: '/home',
+    //     component: Components['workplace'],
+    //     meta: { title: '首页', icon: 'el-icon-house' },
+    //   },
+    // ],
   },
+
   {
-    name: 'AutoReplyRoot',
-    path: '/autoreply',
+    name: 'OrderRoot',
+    path: '/order',
     component: Components['Layout'],
-    redirect: '/autoreply/home',
-    meta: { title: '自动回复', icon: 'el-icon-chat-square' },
+    redirect: '/order/paid/list',
+    meta: { title: '订单', icon: 'el-icon-chat-square' },
     children: [
       {
-        name: 'AutoReply',
-        path: '/autoreply/home',
-        component: Components['auto-reply'],
-        meta: { title: '自动回复', icon: 'el-icon-chat-square' },
+        name: 'PaidOrderList',
+        path: '/order/paid/list',
+        component: OrderPaidList,
+        meta: { title: '待发货', icon: 'el-icon-house' },
       },
-    ],
+      {
+        name: 'ToCommentOrderList',
+        path: '/order/to-comment/list',
+        component: OrderPaidList,
+        meta: { title: '待评价', icon: 'el-icon-house' },
+      },
+    ]
   },
-  {
-    name: 'MenuRoot',
-    path: '/menu',
-    component: Components['Layout'],
-    redirect: '/menu/normal',
-    meta: { title: '自定义菜单', icon: 'el-icon-menu' },
-    children: [
-      {
-        name: 'MenuNormal',
-        path: '/menu/normal',
-        component: Components['MenuNormal'],
-        meta: { title: '通用菜单', icon: 'el-icon-grid' },
-      },
-      {
-        name: 'MenuConditional',
-        path: '/menu/conditional',
-        component: Components['MenuConditional'],
-        meta: { title: '个性化菜单', icon: 'el-icon-discount' },
-      },
-    ],
-  },
-  {
-    name: 'MaterialRoot',
-    path: '/material',
-    component: Components['Layout'],
-    redirect: '/material/list',
-    meta: { title: '素材管理', icon: 'el-icon-film' },
-    children: [
-      {
-        name: 'Material',
-        path: '/material/list',
-        component: Components['MaterialPerm'],
-        meta: { title: '永久素材', icon: 'el-icon-document-copy' },
-      },
-      {
-        name: 'MaterialTmp',
-        path: '/material/list-temp',
-        component: Components['MaterialTemp'],
-        meta: { title: '临时素材', icon: 'el-icon-document-remove' },
-      },
-    ],
-  },
-  {
-    name: 'QrcodeRoot',
-    path: '/qrcode',
-    component: Components['Layout'],
-    redirect: '/qrcode/list',
-    meta: { title: '渠道二维码', icon: 'el-icon-postcard' },
-    children: [
-      {
-        name: 'QrcodePerm',
-        path: '/qrcode/list',
-        component: Components['QrcodePerm'],
-        meta: { title: '永久二维码', icon: 'el-icon-document-copy' },
-      },
-      {
-        name: 'QrcodeTemp',
-        path: '/qrcode/list-temp',
-        component: Components['QrcodeTemp'],
-        meta: { title: '临时二维码', icon: 'el-icon-document-remove' },
-      },
-    ],
-  },
-  {
-    name: 'UserMgrRoot',
-    path: '/user',
-    component: Components['Layout'],
-    redirect: '/user/tag-list',
-    meta: { title: '用户管理', icon: 'el-icon-user' },
-    children: [
-      {
-        name: 'UserTagList',
-        path: '/user/tag-list',
-        component: Components['TagList'],
-        meta: { title: '标签管理', icon: 'el-icon-collection-tag' },
-      },
-      {
-        name: 'UserList',
-        path: '/user/user-list',
-        component: Components['UserList'],
-        meta: { title: '用户列表', icon: 'el-icon-user' },
-      },
-    ],
-  },
+
+
   {
     name: 'RequestLogRoot',
     path: '/request-log',
@@ -199,12 +126,6 @@ export const allowRouter = [
     path: '/change-password',
     component: Components['ChangePassword'],
     meta: { title: '修改密码', icon: 'el-icon-eleme', hidden: true },
-  },
-  {
-    name: 'SelectAppid',
-    path: '/appid/select',
-    component: Components['SelectAppid'],
-    meta: { title: '选择公众号', icon: 'el-icon-eleme', hidden: true },
   },
 ]
 
