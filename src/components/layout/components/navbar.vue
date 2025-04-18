@@ -48,10 +48,10 @@
       </template>
     </el-dropdown>
 
-    <div>
-      <span style="font-size: 12px">当前公众号：</span>
-      <el-tag type="success">{{ appidStore.appidInfo.name }}</el-tag>
-    </div>
+<!--    <div>-->
+<!--      <span style="font-size: 12px">当前公众号：</span>-->
+<!--      <el-tag type="success">{{ appidStore.appidInfo.name }}</el-tag>-->
+<!--    </div>-->
   </div>
 </template>
 
@@ -97,11 +97,11 @@ export default {
     const appidStore = useAppIdInfoStore()
 
     onMounted(() => {
-      appidStore.fetchAppIdInfo()
+      // appidStore.fetchAppIdInfo()
     })
 
     const userName = computed(() => {
-      return userInfoStore.userInfo && userInfoStore.userInfo.username
+      return userInfoStore.userInfo && userInfoStore.userInfo.nickname
     })
 
     const isAdmin = computed(() => {

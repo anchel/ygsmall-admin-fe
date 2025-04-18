@@ -50,7 +50,7 @@ const onSubmit = async () => {
   }
   const password = md5(form.password)
   let response = await ajax.post(
-    '/api/system/user/register',
+    '/api/user/register',
     { username: form.username, email: form.email, password },
     {},
   )

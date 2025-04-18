@@ -2,7 +2,7 @@
   <div class="h-screen other">
     <div class="login-container">
       <div class="login-box">
-        <h2 class="login-title">微信公众号管理系统</h2>
+        <h2 class="login-title">云归山商城管理后台</h2>
         <el-form :model="form" :rules="rules" ref="loginForm" label-width="0">
           <el-form-item prop="username">
             <el-input v-model="form.username" placeholder="用户名" prefix-icon="el-icon-user" clearable></el-input>
@@ -29,7 +29,7 @@
 
 <script setup>
 import { reactive, ref, useTemplateRef, watch } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+
 import theme from '@/config/theme'
 import ajax from '@/utils/request'
 import md5 from 'js-md5'
@@ -74,7 +74,7 @@ const doSubmit = async () => {
     ElMessage.error(data.message)
   } else {
     ElMessage.success('登录成功')
-    location.href = '/appid/select' // 跳转到选择公众号页面
+    location.href = '/' // 跳转到选择公众号页面
   }
 }
 
@@ -116,7 +116,7 @@ watch(
     padding: 40px;
     background: #fff;
     border-radius: 8px;
-    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     text-align: center;
   }
 

@@ -189,6 +189,12 @@ export const allowRouter = [
     meta: { title: '登录', icon: 'el-icon-eleme', hidden: true },
   },
   {
+    name: 'Register',
+    path: '/register',
+    component: Components['Register'],
+    meta: { title: '注册', icon: 'el-icon-eleme', hidden: true },
+  },
+  {
     name: 'ChangePassword',
     path: '/change-password',
     component: Components['ChangePassword'],

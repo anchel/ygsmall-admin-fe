@@ -55,7 +55,7 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, ref, watch } from 'vue'
+import { onMounted, reactive,  watch } from 'vue'
 import mpConfigServerUrlPng from '@/assets/img/mp-config-server-url.png'
 import { QuestionFilled, CopyDocument } from '@element-plus/icons-vue'
 import ajax from '@/utils/request'
@@ -103,7 +103,7 @@ watch(
 
 onMounted(() => {
   console.log('onMounted')
-  appidInfoStore.fetchAppIdInfo()
+  // appidInfoStore.fetchAppIdInfo()
   checkAppid()
 })
 
