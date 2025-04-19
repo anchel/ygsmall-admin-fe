@@ -1,6 +1,5 @@
 <template>
   <div class="content">
-
     <div class="list">
       <div class="filter">
         <el-button type="info" @click="refreshPage" size="default">刷新列表</el-button>
@@ -17,7 +16,7 @@
         </el-input>
       </div>
 
-      <el-table stripe table-layout="auto" size="small" :data="listData.list" v-loading="status.loading">
+      <el-table stripe table-layout="auto" size="small" :data="listData.list" v-loading="listStatus.loading">
         <el-table-column prop="id" label="订单ID" />
         <el-table-column prop="user_id" label="用户ID" />
 
@@ -33,27 +32,53 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="total_amount" label="总金额" >
+        <el-table-column prop="total_amount" label="总金额">
           <template #default="{ row }">
             <span>{{ fenToYuan(row.total_amount) }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column prop="product_amount" label="商品金额" >
+        <el-table-column prop="product_amount" label="商品金额">
           <template #default="{ row }">
             <span>{{ fenToYuan(row.product_amount) }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column prop="pay_amount" label="支付金额" >
+        <el-table-column prop="pay_amount" label="支付金额">
           <template #default="{ row }">
             <span>{{ fenToYuan(row.pay_amount) }}</span>
           </template>
         </el-table-column>
 
-<!--        <el-table-column prop="query" label="参数" width="250" show-overflow-tooltip />-->
+        <el-table-column prop="freight" label="运费">
+          <template #default="{ row }">
+            <span>{{ fenToYuan(row.freight) }}</span>
+          </template>
+        </el-table-column>
 
-<!--        <el-table-column prop="user-agent" label="user-agent" width="150" show-overflow-tooltip />-->
+        <el-table-column prop="status_desc" label="订单状态">
+          <template #default="{ row }">
+            <OrderStatus :order="row" :service="row.aftersales_service_info" />
+          </template>
+        </el-table-column>
+        <el-table-column prop="service_status_desc" label="售后状态">
+          <template #default="{ row }">
+            <OrderServiceStatus :order="row" :service="row.aftersales_service_info" />
+          </template>
+        </el-table-column>
+
+        <el-table-column fixed="right" label="操作" width="150">
+          <template #default="{ $index, row }">
+            <el-button
+              link
+              type="primary"
+              size="small"
+              :disabled="!row.can_shipped"
+              @click="handleClickMarkShipped($index, row)"
+              >发货
+            </el-button>
+          </template>
+        </el-table-column>
       </el-table>
     </div>
     <div class="footer">
@@ -65,6 +90,8 @@
         @current-change="onPageChange"
       />
     </div>
+
+    <common-dialog v-model:dialogVisible="status.dialogVisibleMarkShipped" title="发货"></common-dialog>
   </div>
 </template>
 
@@ -73,100 +100,36 @@ import { onMounted, reactive } from 'vue'
 import dayjs from 'dayjs'
 import ajax from '@/utils/request'
 import { ElMessage } from 'element-plus'
+import CommonDialog from '@/components/common/CommonDialog.vue'
+import OrderStatus from '@/components/order/order-status.vue'
+import OrderServiceStatus from '@/components/order/order-service-status.vue'
 
 import { useGlobalStore } from '@/stores/global'
 import { Search } from '@element-plus/icons-vue'
 
+import { useListFetcher } from '@/composables/useListFetcher'
+
 const { refreshPage } = useGlobalStore()
 
-const search = reactive({
-  keyword: '',
-})
-
-const pagination = reactive({
-  page: 1,
-  size: 20,
-})
-
-const listData = reactive({
-  list: [],
-  total: 0,
-})
+const { handleKeywordChange, search, listStatus, listData, pagination, onPageChange } =
+  useListFetcher('/api/order/paid/list')
 
 const status = reactive({
   loading: false,
-
-  dialogVisibleSetRemark: false,
-  dialogVisibleSetTag: false,
+  dialogVisibleMarkShipped: false,
 })
 
-onMounted(() => {
-  getList()
-})
-
-const handleKeywordChange = () => {
-  listData.total = 0
-  listData.list = []
-  pagination.page = 1
-  getList()
-}
-
-const onPageChange = (page) => {
-  console.log('onPageChange', page)
-  pagination.page = page
-  getList()
-}
-
-const getList = async () => {
-  status.loading = true
-  let response
-  try {
-    let offset = (pagination.page - 1) * pagination.size
-    let count = pagination.size
-
-    response = await ajax.get('/api/order/paid/list', {
-      params: {
-        offset,
-        count,
-        keyword: search.keyword,
-      },
-    })
-  } catch (e) {
-    console.error(e)
-    ElMessage.error('获取数据失败')
-    status.loading = false
-    return
-  }
-  status.loading = false
-  let data = response.data
-  if (data.code !== 0) {
-    ElMessage.error(data.message)
-    return
-  }
-  if (!data.data.list || data.data.list.length === 0) {
-    listData.list = []
-    return
-  }
-
-  listData.list = data.data.list
-  listData.total = data.data.total
-}
-
-function formatTime(seconds) {
-  if (seconds < 0) throw new Error('时间不能为负数')
-
-  const ms = seconds * 1000 // 转为毫秒
-  return `${ms.toFixed(2)} 毫秒`
+const handleClickMarkShipped = (index, row) => {
+  console.log('发货', index, row)
+  status.dialogVisibleMarkShipped = true
 }
 
 function fenToYuan(fen) {
   if (typeof fen !== 'number' || isNaN(fen)) {
-    return 'N/A';
+    return 'N/A'
   }
-  return (fen / 100).toFixed(2);
+  return (fen / 100).toFixed(2)
 }
-
-
 </script>
 
 <style lang="less" scoped>

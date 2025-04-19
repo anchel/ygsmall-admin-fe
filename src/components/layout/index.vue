@@ -18,7 +18,7 @@
       <div class="layout-sidebar-logo flex h-12 relative flex-center shadow-lg">
         <!--                <img class='w-8 h-8' :src='icon' alt="">-->
         <span v-if="layoutSetting.menubar.status === 0 || layoutSetting.menubar.status === 2" class="pl-2"
-          >微信公众号管理系统</span
+          >云归山商城管理后台</span
         >
       </div>
       <div class="layout-sidebar-menubar flex flex-1 overflow-hidden">
