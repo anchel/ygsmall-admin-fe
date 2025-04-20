@@ -4,6 +4,11 @@ import { components } from '@/router/asyncRouter'
 
 import OrderPaidList from '@/views/order/PaidList/PaidList.vue'
 import ShippedOrderList from '@/views/order/ShippedList/ShippedList.vue'
+import ReceivedOrderList from '@/views/order/ReceivedList/ReceivedList.vue'
+import CanceledOrderList from '@/views/order/CanceledList/CanceledList.vue'
+import CompletedOrderList from '@/views/order/CompletedList/CompletedList.vue'
+
+import AfterSalesTodoList from '@/views/order-after-sales/TodoList/TodoList.vue'
 
 const Components = Object.assign({}, components, {
   Layout: () => import('@/components/layout/index.vue'),
@@ -48,6 +53,46 @@ export const allowRouter = [
         path: '/order/shipped/list',
         component: ShippedOrderList,
         meta: { title: '已发货', icon: 'el-icon-TakeawayBox' },
+      },
+      {
+        name: 'ReceivedOrderList',
+        path: '/order/received/list',
+        component: ReceivedOrderList,
+        meta: { title: '已收货', icon: 'el-icon-TakeawayBox' },
+      },
+      {
+        name: 'CompletedOrderList',
+        path: '/order/completed/list',
+        component: CompletedOrderList,
+        meta: { title: '已完成', icon: 'el-icon-TakeawayBox' },
+      },
+      {
+        name: 'CanceledOrderList',
+        path: '/order/canceled/list',
+        component: CanceledOrderList,
+        meta: { title: '已取消', icon: 'el-icon-TakeawayBox' },
+      },
+    ],
+  },
+
+  {
+    name: 'AfterSalesRoot',
+    path: '/after-sales',
+    component: Components['Layout'],
+    redirect: '/order/after-sales/todo/list',
+    meta: { title: '售后', icon: 'el-icon-Goods' },
+    children: [
+      {
+        name: 'AfterSalesTodoList',
+        path: '/order/after-sales/todo/list',
+        component: AfterSalesTodoList,
+        meta: { title: '待处理', icon: 'el-icon-sell' },
+      },
+      {
+        name: 'AfterSalesFinishedList',
+        path: '/order/after-sales/finished/list',
+        component: OrderPaidList,
+        meta: { title: '已结束', icon: 'el-icon-sell' },
       },
     ],
   },

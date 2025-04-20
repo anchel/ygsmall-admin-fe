@@ -140,6 +140,7 @@
       v-if="status.dialogVisibleOrderDetail"
       v-model:visible="status.dialogVisibleOrderDetail"
       :order="listData.list[status.currentIndex]"
+      :service="listData.list[status.currentIndex].aftersales_service_info"
       @cancel="status.dialogVisibleOrderDetail = false"
     ></order-detail-dialog>
   </div>

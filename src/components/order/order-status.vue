@@ -7,12 +7,16 @@ import { computed } from 'vue'
 
 const { order, service } = defineProps({
   order: {
-    type: [Object, null],
-    required: true,
+    type: [Object, null, undefined],
+    default() {
+      return {}
+    },
   },
   service: {
-    type: [Object, null],
-    required: true,
+    type: [Object, null, undefined],
+    default() {
+      return {}
+    },
   },
 })
 

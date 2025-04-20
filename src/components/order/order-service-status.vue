@@ -7,12 +7,16 @@ import { computed } from 'vue'
 
 const { order, service } = defineProps({
   order: {
-    type: [Object, null],
-    required: true,
+    type: [Object, null, undefined],
+    default() {
+      return {}
+    },
   },
   service: {
-    type: [Object, null],
-    required: true,
+    type: [Object, null, undefined],
+    default() {
+      return {}
+    },
   },
 })
 
@@ -32,7 +36,10 @@ const typ = computed(() => {
 })
 
 const status = computed(() => {
-  return order.service_status_desc || '无'
+  if (!service) {
+    return '无'
+  }
+  return service.service_status_desc || '无'
 })
 </script>
 

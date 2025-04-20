@@ -4,7 +4,7 @@
       <el-descriptions title="" :column="3" size="small">
         <el-descriptions-item label="订单号" :span="3">{{ order.order_no }}</el-descriptions-item>
         <el-descriptions-item label="订单状态" :span="3">
-          <OrderStatus :order="order" :service="order.aftersales_service_info" />
+          <OrderStatus :order="order" :service="service" />
         </el-descriptions-item>
         <el-descriptions-item label="下单时间">{{ formatTime(order.created_at) }}</el-descriptions-item>
         <el-descriptions-item label="支付时间">{{ formatTime(order.pay_at) }}</el-descriptions-item>
@@ -58,44 +58,39 @@
       <el-divider />
       <div>
         <div>申请售后信息</div>
-        <el-descriptions size="small" v-if="order.aftersales_service_info">
+        <el-descriptions size="small" v-if="service">
           <el-descriptions-item label="状态" :span="1">
-            <OrderServiceStatus :order="order" :service="order.aftersales_service_info" />
+            <OrderServiceStatus :order="order" :service="service" />
           </el-descriptions-item>
           <el-descriptions-item label="退款状态" :span="1">
-            <OrderServiceRefundStatus :order="order" :service="order.aftersales_service_info" />
+            <OrderServiceRefundStatus :order="order" :service="service" />
           </el-descriptions-item>
           <el-descriptions-item label="退款金额" :span="1">
             <span style="color: red">
-              {{ fenToYuan(order.aftersales_service_info.refund_amount) }}
+              {{ fenToYuan(service.refund_amount) }}
             </span>
           </el-descriptions-item>
 
           <el-descriptions-item label="申请时间">
-            {{ formatTime(order.aftersales_service_info.apply_time) }}
+            {{ formatTime(service.apply_time) }}
           </el-descriptions-item>
           <el-descriptions-item label="申请类型">
-            <OrderServiceTypeDesc :order="order" :service="order.aftersales_service_info" />
+            <OrderServiceTypeDesc :order="order" :service="service" />
           </el-descriptions-item>
           <el-descriptions-item label="是否已收到货">
-            <OrderServiceReceiptStatus :order="order" :service="order.aftersales_service_info" />
+            <OrderServiceReceiptStatus :order="order" :service="service" />
           </el-descriptions-item>
 
           <el-descriptions-item label="申请原因">
-            {{ order.aftersales_service_info.reason_desc }}
+            {{ service.reason_desc }}
           </el-descriptions-item>
           <el-descriptions-item label="申请说明" :span="2">
-            {{ order.aftersales_service_info.remark }}
+            {{ service.remark }}
           </el-descriptions-item>
         </el-descriptions>
         <el-tag type="info" v-else>未申请售后</el-tag>
 
-        <el-table
-          v-if="order.aftersales_service_info && order.aftersales_service_info.evidence"
-          :data="order.aftersales_service_info.evidence.list || []"
-          border
-          stripe
-        >
+        <el-table v-if="service && service.evidence" :data="service.evidence.list || []" border stripe>
           <el-table-column prop="type" label="类型" />
           <el-table-column prop="url" label="图片">
             <template #default="{ row }">
@@ -127,6 +122,9 @@ const { order } = defineProps({
   order: {
     type: Object,
     required: true,
+  },
+  service: {
+    type: [Object, null, undefined],
   },
 })
 const visible = defineModel('visible', { type: Boolean })
