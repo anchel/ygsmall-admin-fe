@@ -44,7 +44,7 @@
 
       <el-divider />
       <div>
-        <div>收货地址</div>
+        <div>订单收货地址</div>
         <el-descriptions size="small" v-if="order.order_address">
           <el-descriptions-item label="收货人">{{ order.order_address.recipient_name }}</el-descriptions-item>
           <el-descriptions-item label="手机号">{{ order.order_address.phone }}</el-descriptions-item>
@@ -53,11 +53,27 @@
             }}{{ order.order_address.detail_address }}
           </el-descriptions-item>
         </el-descriptions>
+        <el-tag type="info" v-else>暂无订单收货地址</el-tag>
+      </div>
+
+      <div>
+        <div>订单物流信息</div>
+        <el-descriptions size="small" border v-if="order.shipped_logistics">
+          <el-descriptions-item label="物流公司code"
+            >{{ order.shipped_logistics.logistics_company_code }}
+          </el-descriptions-item>
+          <el-descriptions-item label="物流公司名称"
+            >{{ order.shipped_logistics.logistics_company_name }}
+          </el-descriptions-item>
+          <el-descriptions-item label="物流单号">{{ order.shipped_logistics.logistics_no }}</el-descriptions-item>
+          <el-descriptions-item label="备注">{{ order.shipped_logistics.remark }}</el-descriptions-item>
+        </el-descriptions>
+        <el-tag type="info" v-else>暂无订单物流信息</el-tag>
       </div>
 
       <el-divider />
       <div>
-        <div>申请售后信息</div>
+        <div>售后申请信息</div>
         <el-descriptions size="small" v-if="service">
           <el-descriptions-item label="状态" :span="1">
             <OrderServiceStatus :order="order" :service="service" />
@@ -104,6 +120,19 @@
             </template>
           </el-table-column>
         </el-table>
+
+        <div>退货物流信息</div>
+        <el-descriptions size="small" border v-if="service && service.return_logistics">
+          <el-descriptions-item label="物流公司code"
+            >{{ service.return_logistics.logistics_company_code }}
+          </el-descriptions-item>
+          <el-descriptions-item label="物流公司名称"
+            >{{ service.return_logistics.logistics_company_name }}
+          </el-descriptions-item>
+          <el-descriptions-item label="物流单号">{{ service.return_logistics.logistics_no }}</el-descriptions-item>
+          <el-descriptions-item label="备注">{{ service.return_logistics.remark }}</el-descriptions-item>
+        </el-descriptions>
+        <el-tag type="info" v-else>暂无退货物流信息</el-tag>
       </div>
     </el-card>
   </common-dialog>

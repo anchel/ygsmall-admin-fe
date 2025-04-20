@@ -17,9 +17,9 @@
       </div>
 
       <el-table stripe table-layout="auto" size="small" :data="listData.list" v-loading="listStatus.loading">
-        <el-table-column prop="id" label="订单ID" />
-        <el-table-column prop="user_id" label="用户ID" />
         <el-table-column prop="after_sales_id" label="售后服务ID" />
+        <el-table-column prop="order_id" label="订单ID" />
+        <el-table-column prop="user_id" label="用户ID" />
 
         <el-table-column prop="apply_time" label="申请时间">
           <template #default="{ row }">

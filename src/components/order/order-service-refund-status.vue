@@ -42,13 +42,13 @@ const status = computed(() => {
     return '无'
   }
   if (service.refund_status === 'approved') {
-    return '退款已同意'
+    return '已同意退款'
   }
   if (service.refund_status === 'processing') {
-    return '退款已执行'
+    return '已执行退款'
   }
   if (service.refund_status === 'completed') {
-    return '退款已完成'
+    return '已完成退款'
   }
   return service.refund_status || '无'
 })
