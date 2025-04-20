@@ -49,14 +49,10 @@ const onSubmit = async () => {
     return
   }
   const password = md5(form.password)
-  let response = await ajax.post(
-    '/api/user/register',
-    { username: form.username, email: form.email, password },
-    {},
-  )
+  let response = await ajax.post('/api/user/register', { username: form.username, email: form.email, password }, {})
 
   // console.log('ret', response.data)
-  let data = response.data
+  let data = response
 
   if (data.code !== 0) {
     alert(data.message)

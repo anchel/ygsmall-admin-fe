@@ -18,16 +18,18 @@ ajax.interceptors.response.use(
         router.push({
           name: 'Login',
         })
-        // ElMessage.error(response.data.message)
-      } else if (response.data.code !== 0 && response.data.message === 'no appid') {
-        router.push({
-          name: 'SelectAppid',
-        })
-        // ElMessage.error(response.data.message)
+        return Promise.reject('no login')
       }
+
+      if (response.data.code !== 0) {
+        return Promise.reject(response.data.message)
+      }
+
+      // 正常情况
+      return response.data
     }
 
-    return response
+    return Promise.reject('no http data')
   },
   function (error) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
@@ -38,11 +40,6 @@ ajax.interceptors.response.use(
       if (data.code !== 0 && data.message === 'no login') {
         router.push({
           name: 'Login',
-        })
-        ElMessage.error(data.message)
-      } else if (data.code !== 0 && data.message === 'no appid') {
-        router.push({
-          name: 'SelectAppid',
         })
         ElMessage.error(data.message)
       } else if (data.code !== 0) {

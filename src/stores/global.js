@@ -81,11 +81,11 @@ export const useUserInfoStore = defineStore('userInfo', () => {
       // 检查是否已经请求过数据
       try {
         const response = await ajax.get('/api/user/get-user-info') // 请求服务器数据
-        if (response.data.code !== 0) {
-          console.error('Failed to fetch user info:', response.data.message)
+        if (response.code !== 0) {
+          console.error('Failed to fetch user info:', response.message)
           return
         }
-        userInfo.value = response.data.data // 更新 userInfo 对象
+        userInfo.value = response.data // 更新 userInfo 对象
         loaded = true
       } catch (error) {
         console.error('Failed to fetch user info:', error)

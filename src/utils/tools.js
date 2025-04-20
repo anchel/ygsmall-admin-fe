@@ -1,6 +1,7 @@
 import qs from 'qs'
 import ajax from './request.js'
 import { ElMessage } from 'element-plus'
+import dayjs from 'dayjs'
 
 /**
  * 获取localStorage对象并转成对应的类型
@@ -81,6 +82,20 @@ export function formatDateTime(prefix, t) {
   }
   const date = new Date(t)
   return `${prefix}${date.getMonth() + 1}月${date.getDate()}日${date.getHours()}:${date.getMinutes()}`
+}
+
+export function formatTime(t) {
+  if (!t) {
+    return ''
+  }
+  return dayjs(t).format('YYYY-MM-DD HH:mm:ss')
+}
+
+export function fenToYuan(fen) {
+  if (typeof fen !== 'number' || isNaN(fen)) {
+    return 'N/A'
+  }
+  return (fen / 100).toFixed(2)
 }
 
 export async function uploadImage(file, fileName) {

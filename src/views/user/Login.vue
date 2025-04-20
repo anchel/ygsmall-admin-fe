@@ -68,7 +68,7 @@ const doSubmit = async () => {
   let response = await ajax.post('/api/user/login', { username: form.username, password }, {})
 
   // console.log('ret', response.data)
-  let data = response.data
+  let data = response
 
   if (data.code !== 0) {
     ElMessage.error(data.message)

@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { components } from '@/router/asyncRouter'
 
 import OrderPaidList from '@/views/order/PaidList/PaidList.vue'
+import ShippedOrderList from '@/views/order/ShippedList/ShippedList.vue'
 
 const Components = Object.assign({}, components, {
   Layout: () => import('@/components/layout/index.vue'),
@@ -34,23 +35,22 @@ export const allowRouter = [
     path: '/order',
     component: Components['Layout'],
     redirect: '/order/paid/list',
-    meta: { title: '订单', icon: 'el-icon-chat-square' },
+    meta: { title: '订单', icon: 'el-icon-Goods' },
     children: [
       {
         name: 'PaidOrderList',
         path: '/order/paid/list',
         component: OrderPaidList,
-        meta: { title: '待发货', icon: 'el-icon-house' },
+        meta: { title: '待发货', icon: 'el-icon-sell' },
       },
       {
-        name: 'ToCommentOrderList',
-        path: '/order/to-comment/list',
-        component: OrderPaidList,
-        meta: { title: '待评价', icon: 'el-icon-house' },
+        name: 'ShippedOrderList',
+        path: '/order/shipped/list',
+        component: ShippedOrderList,
+        meta: { title: '已发货', icon: 'el-icon-TakeawayBox' },
       },
-    ]
+    ],
   },
-
 
   {
     name: 'RequestLogRoot',

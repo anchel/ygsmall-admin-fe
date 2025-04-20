@@ -1,6 +1,11 @@
 <template>
-  <el-dialog :title="title" v-model="visible" :width="width" :close-on-click-modal="closeOnClickModal">
-    <slot></slot>
+  <el-dialog :title="title" v-model="visible" :close-on-click-modal="closeOnClickModal">
+    <el-descriptions :title="infoTitle" :column="column" border>
+      <slot name="extra" />
+      <el-descriptions-item v-for="item in list" :key="item.label" :label="item.label" :span="item.span || 1">
+        {{ item.value }}
+      </el-descriptions-item>
+    </el-descriptions>
 
     <template #footer>
       <el-button v-if="showCancelBtn" @click="handleCancel">{{ cancelBtnText }}</el-button>
@@ -29,15 +34,23 @@ const { title } = defineProps({
   },
   showCancelBtn: {
     type: Boolean,
-    default: true,
+    default: false,
   },
   showConfirmBtn: {
     type: Boolean,
     default: true,
   },
-  width: {
+  infoTitle: {
     type: String,
-    default: '80%',
+    default: '',
+  },
+  column: {
+    type: Number,
+    default: 3,
+  },
+  list: {
+    type: Array,
+    default: () => [],
   },
 })
 const visible = defineModel('visible', { type: Boolean })
@@ -45,6 +58,7 @@ const emit = defineEmits(['cancel', 'confirm'])
 
 const handleConfirm = async () => {
   console.log('handleConfirm')
+  visible.value = false
   emit('confirm')
 }
 

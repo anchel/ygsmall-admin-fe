@@ -43,7 +43,7 @@ export function useListFetcher(apiUrl) {
     }
 
     listStatus.loading = false
-    let data = response.data
+    let data = response
     if (data.code !== 0) {
       ElMessage.error(data.message)
       return
