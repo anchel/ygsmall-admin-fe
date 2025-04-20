@@ -22,7 +22,7 @@ ajax.interceptors.response.use(
       }
 
       if (response.data.code !== 0) {
-        return Promise.reject(response.data.message)
+        return Promise.reject(response.data)
       }
 
       // 正常情况
@@ -41,9 +41,9 @@ ajax.interceptors.response.use(
         router.push({
           name: 'Login',
         })
-        ElMessage.error(data.message)
+        // ElMessage.error(data.message)
       } else if (data.code !== 0) {
-        ElMessage.error(data.message)
+        // ElMessage.error(data.message)
       }
     }
     return Promise.reject(error)

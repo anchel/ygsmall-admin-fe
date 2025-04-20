@@ -33,13 +33,13 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="shipped_at" label="退款时间">
+        <el-table-column prop="service_type" label="售后类型">
           <template #default="{ row }">
-            <span>{{ formatTime(row.shipped_at) }}</span>
+            <span>{{ row.service_type === 'RETURN_GOODS_MONEY' ? '退货退款' : '退款' }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column prop="refund_amount" label="退款金额">
+        <el-table-column prop="refund_amount" label="申请退款金额">
           <template #default="{ row }">
             <span>{{ fenToYuan(row.refund_amount) }}</span>
           </template>
@@ -47,7 +47,8 @@
 
         <el-table-column prop="status_desc" label="订单状态">
           <template #default="{ row }">
-            <OrderStatus :order="row.order" :service="row" />
+            <!--            <OrderStatus :order="row.order" :service="row" />-->
+            <span>{{ row.order.status_desc }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="service_status_desc" label="售后状态">
@@ -56,7 +57,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="logistics_no" label="物流单号">
+        <el-table-column prop="logistics_no" label="发货单号">
           <template #default="{ $index, row }">
             <div style="display: flex; align-items: center">
               <div>{{ row.shipped_logistics ? row.shipped_logistics.logistics_no : '无' }}</div>
@@ -68,7 +69,11 @@
         <el-table-column fixed="right" label="操作" width="150">
           <template #default="{ $index, row }">
             <el-button link type="primary" size="small" @click="handleClickViewOrderDetail($index, row)"
-              >查看
+              >查看申请
+            </el-button>
+
+            <el-button link type="primary" size="small" :disabled="status.loading" @click="handleApprove($index, row)">
+              审核通过
             </el-button>
           </template>
         </el-table-column>
@@ -123,6 +128,7 @@
       :service="listData.list[status.currentIndex]"
       :order="listData.list[status.currentIndex].order"
       @cancel="status.dialogVisibleOrderDetail = false"
+      @confirm="status.dialogVisibleOrderDetail = false"
     ></order-detail-dialog>
   </div>
 </template>
@@ -131,7 +137,7 @@
 import { onMounted, reactive } from 'vue'
 import ajax from '@/utils/request'
 import { formatTime, fenToYuan } from '@/utils/tools'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import CommonDialog from '@/components/common/CommonDialog.vue'
 import OrderStatus from '@/components/order/order-status.vue'
 import OrderServiceStatus from '@/components/order/order-service-status.vue'
@@ -147,7 +153,7 @@ import OrderDetailDialog from '@/components/common/OrderDetailDialog.vue'
 const { refreshPage } = useGlobalStore()
 
 const { handleKeywordChange, search, listStatus, listData, pagination, onPageChange } = useListFetcher(
-  '/api/order/after-sales/todo/list',
+  '/api/order/aftersales/pending-approve/list',
 )
 
 const status = reactive({
@@ -199,6 +205,41 @@ const handleViewLogistics = async (index, row) => {
     },
   ]
   status.dialogVisibleViewLogistics = true
+}
+
+const handleApprove = (index, row) => {
+  let message = '该售后申请是“退款”类型，审核通过后，将直接退款给客户，是否继续？'
+  if (row.service_type === 'RETURN_GOODS_MONEY') {
+    message = '该售后申请是“退货退款”类型，审核通过后，请等待客户退货，是否继续？'
+  }
+  ElMessageBox.confirm(message, '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  })
+    .then(() => {
+      doApprove(row.order_no, row.after_sales_id)
+    })
+    .catch(() => {
+      console.log('取消审核')
+    })
+}
+
+const doApprove = async (order_no, after_sales_id) => {
+  status.loading = true
+  try {
+    await ajax.post('/api/order/after-sales/approve', {
+      order_no,
+      after_sales_id,
+    })
+    ElMessage.success('审核通过')
+    refreshPage()
+  } catch (error) {
+    console.error(error)
+    ElMessage.error((error && error.message) || '审核失败，请重试')
+  } finally {
+    status.loading = false
+  }
 }
 
 // 修改物流

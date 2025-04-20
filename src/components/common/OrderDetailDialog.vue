@@ -1,5 +1,12 @@
 <template>
-  <common-dialog v-model:visible="visible" title="订单详情" width="80%" @confirm="handleConfirm">
+  <common-dialog
+    v-model:visible="visible"
+    title="订单详情"
+    width="80%"
+    :show-cancel-btn="false"
+    @cancel="handleCancel"
+    @confirm="handleConfirm"
+  >
     <el-card>
       <el-descriptions title="" :column="3" size="small">
         <el-descriptions-item label="订单号" :span="3">{{ order.order_no }}</el-descriptions-item>
@@ -158,6 +165,12 @@ const { order } = defineProps({
 })
 const visible = defineModel('visible', { type: Boolean })
 const emit = defineEmits(['cancel', 'confirm'])
+
+const handleCancel = () => {
+  // Handle cancel action
+  console.log('handleCancel')
+  emit('cancel')
+}
 
 const handleConfirm = () => {
   // Handle confirm action
