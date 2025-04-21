@@ -4,7 +4,7 @@ import { components } from '@/router/asyncRouter'
 
 import OrderPaidList from '@/views/order/PaidList/PaidList.vue'
 import ShippedOrderList from '@/views/order/ShippedList/ShippedList.vue'
-import ReceivedOrderList from '@/views/order/ReceivedList/ReceivedList.vue'
+
 import CanceledOrderList from '@/views/order/CanceledList/CanceledList.vue'
 import CompletedOrderList from '@/views/order/CompletedList/CompletedList.vue'
 
@@ -55,12 +55,7 @@ export const allowRouter = [
         component: ShippedOrderList,
         meta: { title: '已发货', icon: 'el-icon-TakeawayBox' },
       },
-      {
-        name: 'ReceivedOrderList',
-        path: '/order/received/list',
-        component: ReceivedOrderList,
-        meta: { title: '已收货', icon: 'el-icon-TakeawayBox' },
-      },
+
       {
         name: 'CompletedOrderList',
         path: '/order/completed/list',

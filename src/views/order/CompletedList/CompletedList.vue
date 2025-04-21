@@ -38,6 +38,12 @@
           </template>
         </el-table-column>
 
+        <el-table-column prop="confirm_receipt_at" label="收货时间">
+          <template #default="{ row }">
+            <span>{{ formatTime(row.confirm_receipt_at) }}</span>
+          </template>
+        </el-table-column>
+
         <el-table-column prop="total_amount" label="总金额">
           <template #default="{ row }">
             <span>{{ fenToYuan(row.total_amount) }}</span>
@@ -73,15 +79,6 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="logistics_no" label="物流单号">
-          <template #default="{ $index, row }">
-            <div style="display: flex; align-items: center">
-              <div>{{ row.shipped_logistics ? row.shipped_logistics.logistics_no : '无' }}</div>
-              <IconViewInfo @click="handleViewLogistics($index, row)" />
-            </div>
-          </template>
-        </el-table-column>
-
         <el-table-column fixed="right" label="操作" width="150">
           <template #default="{ $index, row }">
             <el-button link type="primary" size="small" @click="handleClickViewOrderDetail($index, row)"
@@ -101,38 +98,6 @@
       />
     </div>
 
-    <common-dialog
-      v-model:visible="status.dialogVisibleModifyShipped"
-      title="发货"
-      @confirm="handleConfirmModifyShipped"
-    >
-      <el-form label-position="left" label-width="130">
-        <el-form-item label="物流公司code">
-          <el-input v-model="form.logistics_company_code" placeholder=""></el-input>
-        </el-form-item>
-        <el-form-item label="物流公司名称">
-          <el-input v-model="form.logistics_company_name" placeholder=""></el-input>
-        </el-form-item>
-        <el-form-item label="物流单号">
-          <el-input v-model="form.logistics_no" placeholder=""></el-input>
-        </el-form-item>
-        <el-form-item label="备注">
-          <el-input v-model="form.remark" placeholder=""></el-input>
-        </el-form-item>
-      </el-form>
-    </common-dialog>
-
-    <!--物流信息面板-->
-    <common-info-panel-dialog
-      v-if="status.dialogVisibleViewLogistics"
-      v-model:visible="status.dialogVisibleViewLogistics"
-      title="查看物流"
-      :info-title="logisticsInfoPanel.infoTitle"
-      :column="logisticsInfoPanel.column"
-      :list="logisticsInfoPanel.list"
-    >
-    </common-info-panel-dialog>
-
     <!-- 订单详情 -->
     <order-detail-dialog
       v-if="status.dialogVisibleOrderDetail"
@@ -140,6 +105,7 @@
       :order="listData.list[status.currentIndex]"
       :service="listData.list[status.currentIndex].aftersales_service_info"
       @cancel="status.dialogVisibleOrderDetail = false"
+      @confirm="status.dialogVisibleOrderDetail = false"
     ></order-detail-dialog>
   </div>
 </template>
@@ -168,8 +134,7 @@ const { handleKeywordChange, search, listStatus, listData, pagination, onPageCha
 
 const status = reactive({
   loading: false,
-  dialogVisibleModifyShipped: false,
-  dialogVisibleViewLogistics: false,
+
   dialogVisibleOrderDetail: false,
 
   currentIndex: -1,
@@ -188,93 +153,6 @@ const logisticsInfoPanel = reactive({
   infoTitle: '物流信息',
   column: 3,
 })
-const handleViewLogistics = async (index, row) => {
-  console.log('查看物流', index)
-  status.currentIndex = index
-  logisticsInfoPanel.list = []
-  if (!row.shipped_logistics) {
-    ElMessage.error('暂无物流信息')
-    return
-  }
-  logisticsInfoPanel.list = [
-    {
-      label: '物流公司code',
-      value: row.shipped_logistics.logistics_company_code,
-    },
-    {
-      label: '物流公司名称',
-      value: row.shipped_logistics.logistics_company_name,
-    },
-    {
-      label: '物流单号',
-      value: row.shipped_logistics.logistics_no,
-    },
-    {
-      label: '物流备注',
-      value: row.shipped_logistics.remark,
-    },
-  ]
-  status.dialogVisibleViewLogistics = true
-}
-
-// 修改物流
-const form = reactive({
-  logistics_company_code: '',
-  logistics_company_name: '',
-  logistics_no: '',
-  remark: '',
-})
-
-const handleClickModifyShipped = (index, row) => {
-  status.currentIndex = index
-  if (row.shipped_logistics) {
-    form.logistics_company_code = row.shipped_logistics.logistics_company_code
-    form.logistics_company_name = row.shipped_logistics.logistics_company_name
-    form.logistics_no = row.shipped_logistics.logistics_no
-    form.remark = row.shipped_logistics.remark
-  } else {
-    form.logistics_company_code = ''
-    form.logistics_company_name = ''
-    form.logistics_no = ''
-    form.remark = ''
-  }
-  status.dialogVisibleModifyShipped = true
-}
-
-const handleConfirmModifyShipped = async () => {
-  if (!form.logistics_company_code) {
-    ElMessage.error('请输入物流公司code')
-    return
-  }
-  if (!form.logistics_company_name) {
-    ElMessage.error('请输入物流公司名称')
-    return
-  }
-  if (!form.logistics_no) {
-    ElMessage.error('请输入物流单号')
-    return
-  }
-
-  status.loading = true
-  try {
-    const res = await ajax.post('/api/order/modify-shipped', {
-      ...form,
-      order_id: listData.list[status.currentIndex].id,
-    })
-    if (res.code === 0) {
-      ElMessage.success('修改成功')
-      status.dialogVisibleModifyShipped = false
-      refreshPage()
-    } else {
-      ElMessage.error(res.msg)
-    }
-  } catch (error) {
-    console.error(error)
-    ElMessage.error('修改失败，请重试')
-  } finally {
-    status.loading = false
-  }
-}
 </script>
 
 <style lang="less" scoped>

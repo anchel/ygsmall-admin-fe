@@ -73,7 +73,7 @@
             </el-button>
 
             <el-button link type="primary" size="small" :disabled="status.loading" @click="handleApprove($index, row)">
-              审核通过
+              通过申请
             </el-button>
           </template>
         </el-table-column>
@@ -88,27 +88,6 @@
         @current-change="onPageChange"
       />
     </div>
-
-    <common-dialog
-      v-model:visible="status.dialogVisibleModifyShipped"
-      title="发货"
-      @confirm="handleConfirmModifyShipped"
-    >
-      <el-form label-position="left" label-width="130">
-        <el-form-item label="物流公司code">
-          <el-input v-model="form.logistics_company_code" placeholder=""></el-input>
-        </el-form-item>
-        <el-form-item label="物流公司名称">
-          <el-input v-model="form.logistics_company_name" placeholder=""></el-input>
-        </el-form-item>
-        <el-form-item label="物流单号">
-          <el-input v-model="form.logistics_no" placeholder=""></el-input>
-        </el-form-item>
-        <el-form-item label="备注">
-          <el-input v-model="form.remark" placeholder=""></el-input>
-        </el-form-item>
-      </el-form>
-    </common-dialog>
 
     <!--物流信息面板-->
     <common-info-panel-dialog
@@ -158,7 +137,7 @@ const { handleKeywordChange, search, listStatus, listData, pagination, onPageCha
 
 const status = reactive({
   loading: false,
-  dialogVisibleModifyShipped: false,
+
   dialogVisibleViewLogistics: false,
   dialogVisibleOrderDetail: false,
 
@@ -228,7 +207,7 @@ const handleApprove = (index, row) => {
 const doApprove = async (order_no, after_sales_id) => {
   status.loading = true
   try {
-    await ajax.post('/api/order/after-sales/approve', {
+    await ajax.post('/api/order/aftersales/approve', {
       order_no,
       after_sales_id,
     })
@@ -237,65 +216,6 @@ const doApprove = async (order_no, after_sales_id) => {
   } catch (error) {
     console.error(error)
     ElMessage.error((error && error.message) || '审核失败，请重试')
-  } finally {
-    status.loading = false
-  }
-}
-
-// 修改物流
-const form = reactive({
-  logistics_company_code: '',
-  logistics_company_name: '',
-  logistics_no: '',
-  remark: '',
-})
-
-const handleClickModifyShipped = (index, row) => {
-  status.currentIndex = index
-  if (row.shipped_logistics) {
-    form.logistics_company_code = row.shipped_logistics.logistics_company_code
-    form.logistics_company_name = row.shipped_logistics.logistics_company_name
-    form.logistics_no = row.shipped_logistics.logistics_no
-    form.remark = row.shipped_logistics.remark
-  } else {
-    form.logistics_company_code = ''
-    form.logistics_company_name = ''
-    form.logistics_no = ''
-    form.remark = ''
-  }
-  status.dialogVisibleModifyShipped = true
-}
-
-const handleConfirmModifyShipped = async () => {
-  if (!form.logistics_company_code) {
-    ElMessage.error('请输入物流公司code')
-    return
-  }
-  if (!form.logistics_company_name) {
-    ElMessage.error('请输入物流公司名称')
-    return
-  }
-  if (!form.logistics_no) {
-    ElMessage.error('请输入物流单号')
-    return
-  }
-
-  status.loading = true
-  try {
-    const res = await ajax.post('/api/order/modify-shipped', {
-      ...form,
-      order_id: listData.list[status.currentIndex].id,
-    })
-    if (res.code === 0) {
-      ElMessage.success('修改成功')
-      status.dialogVisibleModifyShipped = false
-      refreshPage()
-    } else {
-      ElMessage.error(res.msg)
-    }
-  } catch (error) {
-    console.error(error)
-    ElMessage.error('修改失败，请重试')
   } finally {
     status.loading = false
   }

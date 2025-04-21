@@ -85,7 +85,7 @@
         <el-table-column fixed="right" label="操作" width="150">
           <template #default="{ $index, row }">
             <el-button link type="primary" size="small" @click="handleClickViewOrderDetail($index, row)"
-              >查看
+              >查看订单
             </el-button>
 
             <el-button link type="primary" size="small" @click="handleClickModifyShipped($index, row)"
@@ -142,6 +142,7 @@
       :order="listData.list[status.currentIndex]"
       :service="listData.list[status.currentIndex].aftersales_service_info"
       @cancel="status.dialogVisibleOrderDetail = false"
+      @confirm="status.dialogVisibleOrderDetail = false"
     ></order-detail-dialog>
   </div>
 </template>
