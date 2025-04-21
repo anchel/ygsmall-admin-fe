@@ -57,14 +57,14 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="logistics_no" label="发货单号">
-          <template #default="{ $index, row }">
-            <div style="display: flex; align-items: center">
-              <div>{{ row.shipped_logistics ? row.shipped_logistics.logistics_no : '无' }}</div>
-              <IconViewInfo @click="handleViewLogistics($index, row)" />
-            </div>
-          </template>
-        </el-table-column>
+        <!--        <el-table-column prop="logistics_no" label="发货单号">-->
+        <!--          <template #default="{ $index, row }">-->
+        <!--            <div style="display: flex; align-items: center">-->
+        <!--              <div>{{ row.shipped_logistics ? row.shipped_logistics.logistics_no : '无' }}</div>-->
+        <!--              <IconViewInfo @click="handleViewLogistics($index, row)" />-->
+        <!--            </div>-->
+        <!--          </template>-->
+        <!--        </el-table-column>-->
 
         <el-table-column fixed="right" label="操作" width="150">
           <template #default="{ $index, row }">

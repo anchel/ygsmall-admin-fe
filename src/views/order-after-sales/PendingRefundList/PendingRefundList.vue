@@ -57,11 +57,11 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="logistics_no" label="发货单号">
+        <el-table-column prop="return_logistics" label="退货单号">
           <template #default="{ $index, row }">
             <div style="display: flex; align-items: center">
-              <div>{{ row.shipped_logistics ? row.shipped_logistics.logistics_no : '无' }}</div>
-              <IconViewInfo @click="handleViewLogistics($index, row)" />
+              <div>{{ row.return_logistics ? row.return_logistics.logistics_no : '无' }}</div>
+              <IconViewInfo @click="handleViewReturnLogistics($index, row)" />
             </div>
           </template>
         </el-table-column>
@@ -72,7 +72,13 @@
               >查看申请
             </el-button>
 
-            <el-button link type="primary" size="small" :disabled="status.loading" @click="handleApprove($index, row)">
+            <el-button
+              link
+              type="primary"
+              size="small"
+              :disabled="status.loading"
+              @click="handleApproveRefund($index, row)"
+            >
               同意退款
             </el-button>
           </template>
@@ -91,8 +97,8 @@
 
     <!--物流信息面板-->
     <common-info-panel-dialog
-      v-if="status.dialogVisibleViewLogistics"
-      v-model:visible="status.dialogVisibleViewLogistics"
+      v-if="status.dialogVisibleViewReturnLogistics"
+      v-model:visible="status.dialogVisibleViewReturnLogistics"
       title="查看物流"
       :info-title="logisticsInfoPanel.infoTitle"
       :column="logisticsInfoPanel.column"
@@ -138,7 +144,7 @@ const { handleKeywordChange, search, listStatus, listData, pagination, onPageCha
 const status = reactive({
   loading: false,
 
-  dialogVisibleViewLogistics: false,
+  dialogVisibleViewReturnLogistics: false, // 查看退货物流
   dialogVisibleOrderDetail: false,
 
   currentIndex: -1,
@@ -157,39 +163,39 @@ const logisticsInfoPanel = reactive({
   infoTitle: '物流信息',
   column: 3,
 })
-const handleViewLogistics = async (index, row) => {
+const handleViewReturnLogistics = async (index, row) => {
   console.log('查看物流', index)
   status.currentIndex = index
   logisticsInfoPanel.list = []
-  if (!row.shipped_logistics) {
+  if (!row.return_logistics) {
     ElMessage.error('暂无物流信息')
     return
   }
   logisticsInfoPanel.list = [
     {
       label: '物流公司code',
-      value: row.shipped_logistics.logistics_company_code,
+      value: row.return_logistics.logistics_company_code,
     },
     {
       label: '物流公司名称',
-      value: row.shipped_logistics.logistics_company_name,
+      value: row.return_logistics.logistics_company_name,
     },
     {
       label: '物流单号',
-      value: row.shipped_logistics.logistics_no,
+      value: row.return_logistics.logistics_no,
     },
     {
       label: '物流备注',
-      value: row.shipped_logistics.remark,
+      value: row.return_logistics.remark,
     },
   ]
-  status.dialogVisibleViewLogistics = true
+  status.dialogVisibleViewReturnLogistics = true
 }
 
-const handleApprove = (index, row) => {
-  let message = '该售后申请是“退款”类型，审核通过后，将直接退款给客户，是否继续？'
+const handleApproveRefund = (index, row) => {
+  let message = '是否继续？'
   if (row.service_type === 'RETURN_GOODS_MONEY') {
-    message = '该售后申请是“退货退款”类型，审核通过后，请等待客户退货，是否继续？'
+    message = '请确认已收到客户退回的货物，同意后将发起退款，是否继续？'
   }
   ElMessageBox.confirm(message, '提示', {
     confirmButtonText: '确定',
@@ -207,7 +213,7 @@ const handleApprove = (index, row) => {
 const doApprove = async (order_no, after_sales_id) => {
   status.loading = true
   try {
-    await ajax.post('/api/order/after-sales/approve', {
+    await ajax.post('/api/order/aftersales/approve-refund', {
       order_no,
       after_sales_id,
     })

@@ -196,7 +196,7 @@ const handleConfirmMarkShipped = async () => {
     if (res.code === 0) {
       ElMessage.success('发货成功')
       status.dialogVisibleMarkShipped = false
-      // refreshPage()
+      refreshPage()
     } else {
       ElMessage.error(res.msg)
     }
