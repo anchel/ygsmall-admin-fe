@@ -22,13 +22,13 @@
 
         <el-table-column prop="created_at" label="创建时间">
           <template #default="{ row }">
-            <span>{{ dayjs(row.created_at).format('YYYY-MM-DD HH:mm:ss') }}</span>
+            <span>{{ formatTime(row.created_at) }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column prop="pay_at" label="支付时间">
+        <el-table-column prop="paid_at" label="支付时间">
           <template #default="{ row }">
-            <span>{{ dayjs(row.pay_at).format('YYYY-MM-DD HH:mm:ss') }}</span>
+            <span>{{ formatTime(row.paid_at) }}</span>
           </template>
         </el-table-column>
 
@@ -127,7 +127,7 @@
 import { onMounted, reactive } from 'vue'
 import dayjs from 'dayjs'
 import ajax from '@/utils/request'
-import { fenToYuan } from '@/utils/tools'
+import { formatTime, fenToYuan } from '@/utils/tools'
 import { ElMessage } from 'element-plus'
 import CommonDialog from '@/components/common/CommonDialog.vue'
 import OrderStatus from '@/components/order/order-status.vue'

@@ -8,8 +8,9 @@ import ShippedOrderList from '@/views/order/ShippedList/ShippedList.vue'
 import CanceledOrderList from '@/views/order/CanceledList/CanceledList.vue'
 import CompletedOrderList from '@/views/order/CompletedList/CompletedList.vue'
 
-import PendingApproveList from '@/views/order-after-sales/PendingApproveList/PendingApproveList.vue'
-import PendingRefundList from '@/views/order-after-sales/PendingRefundList/PendingRefundList.vue'
+import AfterSalesPendingApproveList from '@/views/order-after-sales/PendingApproveList/PendingApproveList.vue'
+import AfterSalesPendingRefundList from '@/views/order-after-sales/PendingRefundList/PendingRefundList.vue'
+import AfterSalesCompletedList from '@/views/order-after-sales/CompletedList/CompletedList.vue'
 
 const Components = Object.assign({}, components, {
   Layout: () => import('@/components/layout/index.vue'),
@@ -79,22 +80,22 @@ export const allowRouter = [
     meta: { title: '售后', icon: 'el-icon-Goods' },
     children: [
       {
-        name: 'PendingApproveList',
+        name: 'AfterSalesPendingApproveList',
         path: '/order/aftersales/pending-approve/list',
-        component: PendingApproveList,
+        component: AfterSalesPendingApproveList,
         meta: { title: '待审核', icon: 'el-icon-sell' },
       },
       {
-        name: 'PendingRefundList',
+        name: 'AfterSalesPendingRefundList',
         path: '/order/aftersales/pending-refund/list',
-        component: PendingRefundList,
+        component: AfterSalesPendingRefundList,
         meta: { title: '待退款', icon: 'el-icon-sell' },
       },
       {
-        name: 'AfterSalesFinishedList',
-        path: '/order/aftersales/finished/list',
-        component: OrderPaidList,
-        meta: { title: '已结束', icon: 'el-icon-sell' },
+        name: 'AfterSalesCompletedList',
+        path: '/order/aftersales/completed/list',
+        component: AfterSalesCompletedList,
+        meta: { title: '已完成', icon: 'el-icon-sell' },
       },
     ],
   },

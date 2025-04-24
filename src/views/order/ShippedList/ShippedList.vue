@@ -26,9 +26,9 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="pay_at" label="支付时间">
+        <el-table-column prop="paid_at" label="支付时间">
           <template #default="{ row }">
-            <span>{{ formatTime(row.pay_at) }}</span>
+            <span>{{ formatTime(row.paid_at) }}</span>
           </template>
         </el-table-column>
 

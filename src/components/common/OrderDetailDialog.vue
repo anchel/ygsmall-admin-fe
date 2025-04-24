@@ -14,7 +14,7 @@
           <OrderStatus :order="order" :service="service" />
         </el-descriptions-item>
         <el-descriptions-item label="下单时间">{{ formatTime(order.created_at) }}</el-descriptions-item>
-        <el-descriptions-item label="支付时间">{{ formatTime(order.pay_at) }}</el-descriptions-item>
+        <el-descriptions-item label="支付时间">{{ formatTime(order.paid_at) }}</el-descriptions-item>
         <el-descriptions-item label="发货时间">{{ formatTime(order.shipped_at) }}</el-descriptions-item>
 
         <el-descriptions-item label="总金额">{{ fenToYuan(order.total_amount) }}</el-descriptions-item>
