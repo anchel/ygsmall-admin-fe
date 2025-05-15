@@ -73,14 +73,14 @@
               >查看订单
             </el-button>
 
-            <el-button
-              link
-              type="primary"
-              size="small"
-              :disabled="!row.can_shipped"
-              @click="handleClickMarkShipped($index, row)"
-              >发货
-            </el-button>
+            <!--            <el-button-->
+            <!--              link-->
+            <!--              type="primary"-->
+            <!--              size="small"-->
+            <!--              :disabled="!row.can_shipped"-->
+            <!--              @click="handleClickMarkShipped($index, row)"-->
+            <!--              >发货-->
+            <!--            </el-button>-->
           </template>
         </el-table-column>
       </el-table>
@@ -142,7 +142,7 @@ import { useListFetcher } from '@/composables/useListFetcher'
 const { refreshPage } = useGlobalStore()
 
 const { handleKeywordChange, search, listStatus, listData, pagination, onPageChange } =
-  useListFetcher('/api/order/paid/list')
+  useListFetcher('/api/order/all/list')
 
 const status = reactive({
   loading: false,

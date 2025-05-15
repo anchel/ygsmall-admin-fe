@@ -69,11 +69,15 @@
         <el-table-column fixed="right" label="操作" width="150">
           <template #default="{ $index, row }">
             <el-button link type="primary" size="small" @click="handleClickViewOrderDetail($index, row)"
-              >查看申请
+              >查看
             </el-button>
 
             <el-button link type="primary" size="small" :disabled="status.loading" @click="handleApprove($index, row)">
-              通过申请
+              通过
+            </el-button>
+
+            <el-button link type="primary" size="small" :disabled="status.loading" @click="handleApprove($index, row)">
+              拒绝
             </el-button>
           </template>
         </el-table-column>
@@ -246,7 +250,7 @@ const doApprove = async (order_no, after_sales_id) => {
   }
 
   .footer {
-    margin-top: 20px;
+    margin-top: 10px;
     text-align: center;
   }
 }

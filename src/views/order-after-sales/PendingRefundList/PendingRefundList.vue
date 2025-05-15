@@ -252,7 +252,7 @@ const doApprove = async (order_no, after_sales_id) => {
   }
 
   .footer {
-    margin-top: 20px;
+    margin-top: 10px;
     text-align: center;
   }
 }

@@ -167,7 +167,7 @@ const handleClickViewOrderDetail = (index, row) => {
   }
 
   .footer {
-    margin-top: 20px;
+    margin-top: 10px;
     text-align: center;
   }
 }

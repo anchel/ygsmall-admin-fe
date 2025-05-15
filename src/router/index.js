@@ -8,6 +8,8 @@ import ShippedOrderList from '@/views/order/ShippedList/ShippedList.vue'
 import CanceledOrderList from '@/views/order/CanceledList/CanceledList.vue'
 import CompletedOrderList from '@/views/order/CompletedList/CompletedList.vue'
 
+import OrderAllList from '@/views/order/AllList/AllList.vue'
+
 import AfterSalesPendingApproveList from '@/views/order-after-sales/PendingApproveList/PendingApproveList.vue'
 import AfterSalesPendingRefundList from '@/views/order-after-sales/PendingRefundList/PendingRefundList.vue'
 import AfterSalesCompletedList from '@/views/order-after-sales/CompletedList/CompletedList.vue'
@@ -68,6 +70,12 @@ export const allowRouter = [
         path: '/order/canceled/list',
         component: CanceledOrderList,
         meta: { title: '已取消', icon: 'el-icon-TakeawayBox' },
+      },
+      {
+        name: 'AllOrderList',
+        path: '/order/all/list',
+        component: OrderAllList,
+        meta: { title: '全部', icon: 'el-icon-TakeawayBox' },
       },
     ],
   },

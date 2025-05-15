@@ -25,7 +25,7 @@ const typ = computed(() => {
     return 'info'
   }
   if (service.status === 'applied' || service.status === 'approved') {
-    return 'primary'
+    return 'danger'
   } else if (service.status === 'canceled' || service.status === 'rejected') {
     return 'warning'
   } else if (service.status === 'completed') {
