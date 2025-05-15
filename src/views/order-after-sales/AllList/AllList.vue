@@ -57,27 +57,10 @@
           </template>
         </el-table-column>
 
-        <!--        <el-table-column prop="logistics_no" label="发货单号">-->
-        <!--          <template #default="{ $index, row }">-->
-        <!--            <div style="display: flex; align-items: center">-->
-        <!--              <div>{{ row.shipped_logistics ? row.shipped_logistics.logistics_no : '无' }}</div>-->
-        <!--              <IconViewInfo @click="handleViewLogistics($index, row)" />-->
-        <!--            </div>-->
-        <!--          </template>-->
-        <!--        </el-table-column>-->
-
         <el-table-column fixed="right" label="操作" width="150">
           <template #default="{ $index, row }">
             <el-button link type="primary" size="small" @click="handleClickViewOrderDetail($index, row)"
-              >查看
-            </el-button>
-
-            <el-button link type="primary" size="small" :disabled="status.loading" @click="handleApprove($index, row)">
-              通过
-            </el-button>
-
-            <el-button link type="primary" size="small" :disabled="status.loading" @click="handleReject($index, row)">
-              拒绝
+              >查看详情
             </el-button>
           </template>
         </el-table-column>
@@ -136,7 +119,7 @@ import OrderDetailDialog from '@/components/common/OrderDetailDialog.vue'
 const { refreshPage } = useGlobalStore()
 
 const { handleKeywordChange, search, listStatus, listData, pagination, onPageChange } = useListFetcher(
-  '/api/order/aftersales/pending-approve/list',
+  '/api/order/aftersales/all/list',
 )
 
 const status = reactive({
@@ -161,74 +144,33 @@ const logisticsInfoPanel = reactive({
   infoTitle: '物流信息',
   column: 3,
 })
-
-const handleApprove = (index, row) => {
-  let message = '该售后申请是“退款”类型，审核通过后，将直接退款给客户，是否继续？'
-  if (row.service_type === 'RETURN_GOODS_MONEY') {
-    message = '该售后申请是“退货退款”类型，审核通过后，请等待客户退货，是否继续？'
+const handleViewLogistics = async (index, row) => {
+  console.log('查看物流', index)
+  status.currentIndex = index
+  logisticsInfoPanel.list = []
+  if (!row.shipped_logistics) {
+    ElMessage.error('暂无物流信息')
+    return
   }
-  ElMessageBox.confirm(message, '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  })
-    .then(() => {
-      doApprove(row.order_no, row.after_sales_id)
-    })
-    .catch(() => {
-      console.log('取消审核')
-    })
-}
-
-const doApprove = async (order_no, after_sales_id) => {
-  status.loading = true
-  try {
-    await ajax.post('/api/order/aftersales/approve', {
-      order_no,
-      after_sales_id,
-    })
-    ElMessage.success('审核通过')
-    refreshPage()
-  } catch (error) {
-    console.error(error)
-    ElMessage.error((error && error.message) || '审核失败，请重试')
-  } finally {
-    status.loading = false
-  }
-}
-
-// 拒绝
-const handleReject = (index, row) => {
-  let message = '拒绝该订单的售后申请？'
-
-  ElMessageBox.confirm(message, '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  })
-    .then(() => {
-      doReject(row.order_no, row.after_sales_id)
-    })
-    .catch(() => {
-      console.log('取消审核')
-    })
-}
-
-const doReject = async (order_no, after_sales_id) => {
-  status.loading = true
-  try {
-    await ajax.post('/api/order/aftersales/reject', {
-      order_no,
-      after_sales_id,
-    })
-    ElMessage.success('审核拒绝成功')
-    refreshPage()
-  } catch (error) {
-    console.error(error)
-    ElMessage.error((error && error.message) || '审核拒绝失败，请重试')
-  } finally {
-    status.loading = false
-  }
+  logisticsInfoPanel.list = [
+    {
+      label: '物流公司code',
+      value: row.shipped_logistics.logistics_company_code,
+    },
+    {
+      label: '物流公司名称',
+      value: row.shipped_logistics.logistics_company_name,
+    },
+    {
+      label: '物流单号',
+      value: row.shipped_logistics.logistics_no,
+    },
+    {
+      label: '物流备注',
+      value: row.shipped_logistics.remark,
+    },
+  ]
+  status.dialogVisibleViewLogistics = true
 }
 </script>
 

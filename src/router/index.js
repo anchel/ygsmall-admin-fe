@@ -4,15 +4,14 @@ import { components } from '@/router/asyncRouter'
 
 import OrderPaidList from '@/views/order/PaidList/PaidList.vue'
 import ShippedOrderList from '@/views/order/ShippedList/ShippedList.vue'
-
 import CanceledOrderList from '@/views/order/CanceledList/CanceledList.vue'
 import CompletedOrderList from '@/views/order/CompletedList/CompletedList.vue'
-
 import OrderAllList from '@/views/order/AllList/AllList.vue'
 
 import AfterSalesPendingApproveList from '@/views/order-after-sales/PendingApproveList/PendingApproveList.vue'
 import AfterSalesPendingRefundList from '@/views/order-after-sales/PendingRefundList/PendingRefundList.vue'
 import AfterSalesCompletedList from '@/views/order-after-sales/CompletedList/CompletedList.vue'
+import AfterSalesAllList from '@/views/order-after-sales/AllList/AllList.vue'
 
 const Components = Object.assign({}, components, {
   Layout: () => import('@/components/layout/index.vue'),
@@ -104,6 +103,12 @@ export const allowRouter = [
         path: '/order/aftersales/completed/list',
         component: AfterSalesCompletedList,
         meta: { title: '已完成', icon: 'el-icon-sell' },
+      },
+      {
+        name: 'AfterSalesAllList',
+        path: '/order/aftersales/all/list',
+        component: AfterSalesAllList,
+        meta: { title: '全部', icon: 'el-icon-sell' },
       },
     ],
   },
