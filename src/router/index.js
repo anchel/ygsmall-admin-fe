@@ -24,18 +24,18 @@ const Components = Object.assign({}, components, {
 export const allowRouter = [
   {
     name: 'HomeRoot',
-    path: '/home',
+    path: '/',
     component: Components['Layout'],
-    redirect: '/order/paid/list',
+    redirect: '/home',
     meta: { title: '首页', icon: 'el-icon-eleme' },
-    // children: [
-    //   {
-    //     name: 'Home',
-    //     path: '/home',
-    //     component: Components['workplace'],
-    //     meta: { title: '首页', icon: 'el-icon-house' },
-    //   },
-    // ],
+    children: [
+      {
+        name: 'Home',
+        path: '/home',
+        component: Components['workplace'],
+        meta: { title: '首页', icon: 'el-icon-house' },
+      },
+    ],
   },
 
   {
