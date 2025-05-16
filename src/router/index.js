@@ -24,7 +24,7 @@ const Components = Object.assign({}, components, {
 export const allowRouter = [
   {
     name: 'HomeRoot',
-    path: '/',
+    path: '/home',
     component: Components['Layout'],
     redirect: '/order/paid/list',
     meta: { title: '首页', icon: 'el-icon-eleme' },
