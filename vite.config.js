@@ -15,9 +15,10 @@ import autoprefixer from 'autoprefixer'
 export default defineConfig(({ command, mode }) => {
   console.log('command:', command, 'mode:', mode)
   const env = loadEnv(mode, process.cwd(), '')
+  console.log('env:', env.PROXY_TARGET, env.CDN_PUBLIC_URL)
 
   return {
-    base: '/',
+    base: env.CDN_PUBLIC_URL || '/',
     build: {
       rollupOptions: {
         input: {
