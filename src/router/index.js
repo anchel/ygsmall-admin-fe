@@ -13,6 +13,9 @@ import AfterSalesPendingRefundList from '@/views/order-after-sales/PendingRefund
 import AfterSalesCompletedList from '@/views/order-after-sales/CompletedList/CompletedList.vue'
 import AfterSalesAllList from '@/views/order-after-sales/AllList/AllList.vue'
 
+import CategoryList from '@/views/cat_and_attr/Category/CategoryList.vue'
+import AttributeList from '@/views/cat_and_attr/Attribute/AttributeList.vue'
+
 const Components = Object.assign({}, components, {
   Layout: () => import('@/components/layout/index.vue'),
   LayoutSystem: () => import('@/components/layout/layout-system.vue'),
@@ -114,6 +117,28 @@ export const allowRouter = [
   },
 
   {
+    name: 'CatAttrRoot',
+    path: '/cat_and_attr',
+    component: Components['Layout'],
+    redirect: '/cat_and_attr/category/list',
+    meta: { title: '分类与属性', icon: 'el-icon-Goods' },
+    children: [
+      {
+        name: 'CategoryList',
+        path: '/cat_and_attr/category/list',
+        component: CategoryList,
+        meta: { title: '分类列表', icon: 'el-icon-sell' },
+      },
+      {
+        name: 'AttributeList',
+        path: '/cat_and_attr/attribute/list',
+        component: AttributeList,
+        meta: { title: '属性列表', icon: 'el-icon-sell' },
+      },
+    ],
+  },
+
+  {
     name: 'RequestLogRoot',
     path: '/request-log',
     component: Components['Layout'],
@@ -132,7 +157,7 @@ export const allowRouter = [
     name: 'ErrorPage',
     path: '/error',
     meta: { title: '错误页面', icon: 'el-icon-eleme', hidden: true },
-    component: Components.Layout,
+    component: Components['Layout'],
     redirect: '/error/404',
     children: [
       {
@@ -146,27 +171,6 @@ export const allowRouter = [
         path: '/error/404',
         component: Components['404'],
         meta: { title: '404', icon: 'el-icon-tools' },
-      },
-    ],
-  },
-  {
-    name: 'SystemRoot',
-    path: '/system',
-    component: Components['LayoutSystem'],
-    meta: { title: '系统设置', icon: 'el-icon-setting', hidden: true },
-    redirect: '/system/user/list',
-    children: [
-      {
-        name: 'SystemUserList',
-        path: '/system/user/list',
-        component: Components['SystemUserList'],
-        meta: { title: '用户管理', icon: 'el-icon-user' },
-      },
-      {
-        name: 'SystemAppidList',
-        path: '/system/appid/list',
-        component: Components['AppidList'],
-        meta: { title: '公众号管理', icon: 'el-icon-list' },
       },
     ],
   },

@@ -104,14 +104,14 @@ export async function uploadImage(file, fileName) {
   const formData = new FormData()
   formData.append('file', file, fileName)
 
-  let response = await ajax.post('/api/system/image/upload', formData)
+  let response = await ajax.post('/api/common/upload-image', formData)
 
-  let data = response.data
-  if (data.code !== 0) {
-    return ''
+  if (response.code !== 0) {
+    ElMessage.error(response.message || '上传图片失败')
+    return Promise.reject(response.message)
   }
 
-  return data.data.imgUrl
+  return response.data.imgUrl
 }
 
 export function copyTextToClipboard(text) {
