@@ -83,7 +83,7 @@
             :preview-height="100"
             :crop-size-height="100"
             :crop-width-height-ratio="1"
-            :crop-img-original-ratio="true"
+            :crop-img-original-ratio="false"
             :img-url="editForm.thumbnail"
             v-model="cropImg"
           ></image-cropper>
