@@ -5,13 +5,7 @@
       <el-button type="info" @click="refreshList" style="margin-left: 10px">刷新列表</el-button>
     </div>
     <div class="list">
-      <el-tree
-        :data="listData.list"
-        :props="{ class: 'my-tree-node' }"
-        node-key="id"
-        default-expand-all
-        :expand-on-click-node="false"
-      >
+      <el-tree :data="listData.list" node-key="id" default-expand-all :expand-on-click-node="false">
         <template #default="{ node, data }">
           <div class="custom-tree-node">
             <div style="display: flex; align-items: center">
@@ -26,7 +20,7 @@
             </div>
 
             <div>
-              <el-button type="primary" link @click="handleAppend(data)"> 添加</el-button>
+              <el-button type="primary" link @click="handleAppend(node, data)"> 添加</el-button>
               <el-button style="margin-left: 4px" type="primary" link @click="handleEdit(node, data)"> 编辑</el-button>
               <el-button style="margin-left: 4px" type="danger" link @click="handleRemove(node, data)">
                 删除
@@ -48,7 +42,7 @@
         </el-form-item>
         <el-form-item label="上级分类" prop="parent_id" v-if="editForm.parent_id">
           <el-select v-model="editForm.parent_id" placeholder="请选择上级分类">
-            <el-option v-for="item in listData.list" :key="item.id" :label="item.name" :value="item.id" />
+            <el-option v-for="item in parentIdOptions" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
         <!--        <el-form-item label="缩略图" prop="thumbnail">-->
@@ -105,7 +99,7 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import ajax from '@/utils/request.js'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { uploadImage } from '@/utils/tools.js'
@@ -189,20 +183,41 @@ const resetForm = () => {
   cropImg.value = null
 }
 
+const currentNode = ref(null)
+const parentIdOptions = computed(() => {
+  if (currentNode.value) {
+    let parentNode = currentNode.value.parent
+    console.log('parentNode', parentNode)
+
+    return parentNode
+      ? [{ id: parentNode.data.id, name: parentNode.data.name }]
+      : listData.list.map((item) => ({
+          name: item.name,
+          id: item.id,
+        }))
+  }
+  return listData.list.map((item) => ({
+    name: item.name,
+    id: item.id,
+  }))
+})
+
 const handleAdd = (parentID) => {
   resetForm()
   editForm.value.parent_id = parentID || 0
+  currentNode.value = null
   status.dialogVisible = true
 }
-
-const handleAppend = (data) => {
+const handleAppend = (node, data) => {
   resetForm()
   editForm.value.parent_id = data.id
+  currentNode.value = node
   status.dialogVisible = true
 }
 const handleEdit = (node, data) => {
   resetForm()
   editForm.value = { ...data }
+  currentNode.value = node
   status.dialogVisible = true
 }
 
