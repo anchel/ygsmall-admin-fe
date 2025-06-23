@@ -22,11 +22,13 @@
 
         <el-table-column fixed="right" label="操作" width="150">
           <template #default="{ $index, row }">
-            <el-button link type="primary" size="small" @click="handleEdit($index, row)">编辑</el-button>
-
             <el-button link type="primary" size="small" @click="handleClickViewOrderDetail($index, row)"
               >查看
             </el-button>
+
+            <el-button link type="primary" size="small" @click="handleEdit($index, row)">编辑</el-button>
+
+            <el-button link type="danger" size="small" @click="handleDelete($index, row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -43,7 +45,12 @@
 
     <attribute-value-list v-model:visible="status2.dialogVisibleValueList" title="属性值列表" />
 
-    <common-dialog v-model:visible="status.dialogVisible" title="发货" @confirm="handleConfirm">
+    <common-dialog
+      v-model:visible="status.dialogVisible"
+      title="发货"
+      :confirm-btn-loading="status.loading"
+      @confirm="handleConfirm"
+    >
       <el-form :model="formData" label-position="left" label-width="130">
         <el-form-item label="ID">
           <el-input v-model="formData.id" placeholder="" :disabled="true"></el-input>
@@ -61,7 +68,7 @@ import { onMounted, reactive } from 'vue'
 import dayjs from 'dayjs'
 import ajax from '@/utils/request'
 import { formatTime, fenToYuan } from '@/utils/tools'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import AttributeValueList from './components/AttributeValueList.vue'
 
 import { useGlobalStore } from '@/stores/global'
@@ -101,9 +108,30 @@ const handleConfirm = async () => {
     ElMessage.success('操作成功')
     closeDialog() // 关闭对话框
     refreshPage() // 刷新页面数据
-  } catch (error) {
-    ElMessage.error('操作失败', error)
+  } catch (e) {
+    ElMessage.error('操作失败', e)
   }
+}
+
+const handleDelete = async (index, row) => {
+  ElMessageBox.confirm('确定删除吗?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  })
+    .then(() => {
+      doDelete(row.id)
+        .then(() => {
+          ElMessage.success('删除成功')
+          refreshPage() // 刷新页面数据
+        })
+        .catch((e) => {
+          ElMessage.error('删除失败', e)
+        })
+    })
+    .catch(() => {
+      // 用户取消删除操作
+    })
 }
 
 const status2 = reactive({

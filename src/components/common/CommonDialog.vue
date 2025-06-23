@@ -4,13 +4,15 @@
 
     <template #footer>
       <el-button v-if="showCancelBtn" @click="handleCancel">{{ cancelBtnText }}</el-button>
-      <el-button v-if="showConfirmBtn" type="primary" @click="handleConfirm">{{ confirmBtnText }}</el-button>
+      <el-button v-if="showConfirmBtn" type="primary" @click="handleConfirm" :loading="confirmBtnLoading">
+        {{ confirmBtnText }}
+      </el-button>
     </template>
   </el-dialog>
 </template>
 
 <script setup>
-const { title } = defineProps({
+const { title, confirmBtnLoading } = defineProps({
   title: {
     type: String,
     default: '对话框',
@@ -26,6 +28,10 @@ const { title } = defineProps({
   confirmBtnText: {
     type: String,
     default: '确 定',
+  },
+  confirmBtnLoading: {
+    type: Boolean,
+    default: false,
   },
   showCancelBtn: {
     type: Boolean,

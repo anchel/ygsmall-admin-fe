@@ -49,20 +49,20 @@ export function useListOperation(options = {}) {
       }
     } catch (e) {
       console.error(e)
-      ElMessage.error('操作失败')
+      // ElMessage.error('操作失败')
       status.loading = false
-      return
+      return Promise.reject(e || '操作失败')
     }
 
     console.log('handleSubmit', response)
 
     status.loading = false
     if (response.code !== 0) {
-      ElMessage.error(response.message)
+      // ElMessage.error(response.message)
       return Promise.reject(response.message)
     }
 
-    ElMessage.success('操作成功')
+    // ElMessage.success('操作成功')
 
     return response.data || null
   }
@@ -79,18 +79,18 @@ export function useListOperation(options = {}) {
       response = await ajax.post(deleteApiUrl, { id })
     } catch (e) {
       console.error(e)
-      ElMessage.error('删除失败')
+      // ElMessage.error('删除失败')
       status.loading = false
-      return
+      return Promise.reject(e || '操作失败')
     }
 
     status.loading = false
     if (response.code !== 0) {
-      ElMessage.error(response.message)
+      // ElMessage.error(response.message)
       return Promise.reject(response.message)
     }
 
-    ElMessage.success('删除成功')
+    // ElMessage.success('删除成功')
     return response.data || null
   }
 
