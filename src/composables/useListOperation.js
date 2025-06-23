@@ -3,7 +3,7 @@ import { ElMessage } from 'element-plus'
 import ajax from '@/utils/request'
 
 export function useListOperation(options = {}) {
-  const { defaults = {}, addApiUrl = '', updateApiUrl = '', deleteApiUrl = '' } = options
+  const { defaults = {}, addApiUrl = '', updateApiUrl = '', deleteApiUrl = '', defaultParams = {} } = options
 
   const formData = ref({
     ...defaults,
@@ -39,11 +39,13 @@ export function useListOperation(options = {}) {
       if (form.id) {
         // Update operation
         response = await ajax.post(updateApiUrl, {
+          ...defaultParams,
           ...form,
         })
       } else {
         // Add operation
         response = await ajax.post(addApiUrl, {
+          ...defaultParams,
           ...form,
         })
       }
@@ -67,7 +69,7 @@ export function useListOperation(options = {}) {
     return response.data || null
   }
 
-  const doDelete = async (id) => {
+  const doDelete = async (id, params = {}) => {
     if (!id) {
       ElMessage.error('ID不能为空')
       return
@@ -76,7 +78,11 @@ export function useListOperation(options = {}) {
     status.loading = true
     let response
     try {
-      response = await ajax.post(deleteApiUrl, { id })
+      response = await ajax.post(deleteApiUrl, {
+        ...defaultParams,
+        ...params,
+        id,
+      })
     } catch (e) {
       console.error(e)
       // ElMessage.error('删除失败')

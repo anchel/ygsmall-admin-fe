@@ -124,8 +124,9 @@ import OrderDetailDialog from '@/components/common/OrderDetailDialog.vue'
 
 const { refreshPage } = useGlobalStore()
 
-const { handleKeywordChange, search, listStatus, listData, pagination, onPageChange } =
-  useListFetcher('/api/order/canceled/list')
+const { handleKeywordChange, search, listStatus, listData, pagination, onPageChange } = useListFetcher({
+  listApiUrl: '/api/order/canceled/list',
+})
 
 const status = reactive({
   loading: false,

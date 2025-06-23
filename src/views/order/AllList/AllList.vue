@@ -141,8 +141,9 @@ import { useListFetcher } from '@/composables/useListFetcher'
 
 const { refreshPage } = useGlobalStore()
 
-const { handleKeywordChange, search, listStatus, listData, pagination, onPageChange } =
-  useListFetcher('/api/order/all/list')
+const { handleKeywordChange, search, listStatus, listData, pagination, onPageChange } = useListFetcher({
+  listApiUrl: '/api/order/all/list',
+})
 
 const status = reactive({
   loading: false,

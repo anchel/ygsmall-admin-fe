@@ -2,7 +2,9 @@ import { reactive, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import ajax from '@/utils/request'
 
-export function useListFetcher(apiUrl) {
+export function useListFetcher(options = {}) {
+  const { listApiUrl, listApiParams = {} } = options
+
   const search = reactive({
     keyword: '',
   })
@@ -28,8 +30,9 @@ export function useListFetcher(apiUrl) {
       let offset = (pagination.page - 1) * pagination.size
       let count = pagination.size
 
-      response = await ajax.get(apiUrl, {
+      response = await ajax.get(listApiUrl, {
         params: {
+          ...listApiParams,
           offset,
           count,
           keyword: search.keyword,
@@ -69,6 +72,13 @@ export function useListFetcher(apiUrl) {
     getList()
   })
 
+  const refreshList = () => {
+    listData.total = 0
+    listData.list = []
+    pagination.page = 1
+    getList()
+  }
+
   return {
     search,
     pagination,
@@ -77,5 +87,6 @@ export function useListFetcher(apiUrl) {
     handleKeywordChange,
     onPageChange,
     getList,
+    refreshList,
   }
 }

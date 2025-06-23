@@ -43,11 +43,18 @@
       />
     </div>
 
-    <attribute-value-list v-model:visible="status2.dialogVisibleValueList" title="属性值列表" />
+    <attribute-value-list
+      :show-cancel-btn="false"
+      confirm-btn-text="关闭"
+      v-if="status2.dialogVisibleValueList"
+      v-model:visible="status2.dialogVisibleValueList"
+      title="属性值列表"
+      :attribute-id="status2.currentAttributeId"
+    />
 
     <common-dialog
       v-model:visible="status.dialogVisible"
-      title="发货"
+      :title="formData.id ? '编辑属性' : '添加属性'"
       :confirm-btn-loading="status.loading"
       @confirm="handleConfirm"
     >
@@ -80,8 +87,9 @@ import CommonDialog from '@/components/common/CommonDialog.vue'
 
 const { refreshPage } = useGlobalStore()
 
-const { handleKeywordChange, search, listStatus, listData, pagination, onPageChange } =
-  useListFetcher('/api/attribute/list')
+const { handleKeywordChange, search, listStatus, listData, pagination, onPageChange } = useListFetcher({
+  listApiUrl: '/api/attribute/list',
+})
 
 const { formData, setFormData, resetForm, status, doSubmit, doDelete, openDialog, closeDialog } = useListOperation({
   defaults: {
@@ -136,9 +144,10 @@ const handleDelete = async (index, row) => {
 
 const status2 = reactive({
   dialogVisibleValueList: false,
+  currentAttributeId: null,
 })
 const handleClickViewOrderDetail = (index, row) => {
-  status2.currentIndex = index
+  status2.currentAttributeId = row.id
   status2.dialogVisibleValueList = true
 }
 </script>
