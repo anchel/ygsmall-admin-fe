@@ -2,18 +2,18 @@
   <div class="content">
     <div class="list">
       <div class="filter">
-        <el-button type="info" @click="refreshPage" size="default">刷新列表</el-button>
-        <el-input
-          clearable
-          v-model="search.keyword"
-          placeholder="请输入关键字"
-          @change="handleKeywordChange"
-          style="width: 400px; margin-bottom: 10px"
-        >
-          <template #append>
-            <el-button :icon="Search" />
-          </template>
-        </el-input>
+        <div class="top-left-container">
+          <el-button type="primary" @click="handleAdd" size="default">添加</el-button>
+        </div>
+
+        <div class="top-right-container">
+          <el-button :icon="Refresh" @click="refreshPage" />
+          <el-input clearable v-model="search.keyword" placeholder="请输入关键字" @change="handleKeywordChange">
+            <template #append>
+              <el-button :icon="Search" />
+            </template>
+          </el-input>
+        </div>
       </div>
 
       <el-table stripe table-layout="auto" size="small" :data="listData.list" v-loading="listStatus.loading">
@@ -22,6 +22,8 @@
 
         <el-table-column fixed="right" label="操作" width="150">
           <template #default="{ $index, row }">
+            <el-button link type="primary" size="small" @click="handleEdit($index, row)">编辑</el-button>
+
             <el-button link type="primary" size="small" @click="handleClickViewOrderDetail($index, row)"
               >查看
             </el-button>
@@ -39,7 +41,18 @@
       />
     </div>
 
-    <attribute-value-list v-model:visible="status.dialogVisibleValueList" title="属性值列表" />
+    <attribute-value-list v-model:visible="status2.dialogVisibleValueList" title="属性值列表" />
+
+    <common-dialog v-model:visible="status.dialogVisible" title="发货" @confirm="handleConfirm">
+      <el-form :model="formData" label-position="left" label-width="130">
+        <el-form-item label="ID">
+          <el-input v-model="formData.id" placeholder="" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="名称">
+          <el-input v-model="formData.name" placeholder=""></el-input>
+        </el-form-item>
+      </el-form>
+    </common-dialog>
   </div>
 </template>
 
@@ -52,24 +65,53 @@ import { ElMessage } from 'element-plus'
 import AttributeValueList from './components/AttributeValueList.vue'
 
 import { useGlobalStore } from '@/stores/global'
-import { Search } from '@element-plus/icons-vue'
+import { Search, Refresh } from '@element-plus/icons-vue'
 
 import { useListFetcher } from '@/composables/useListFetcher'
+import { useListOperation } from '@/composables/useListOperation'
+import CommonDialog from '@/components/common/CommonDialog.vue'
 
 const { refreshPage } = useGlobalStore()
 
 const { handleKeywordChange, search, listStatus, listData, pagination, onPageChange } =
   useListFetcher('/api/attribute/list')
 
-const status = reactive({
-  dialogVisibleValueList: false,
-
-  currentIndex: -1,
+const { formData, setFormData, resetForm, status, doSubmit, doDelete, openDialog, closeDialog } = useListOperation({
+  defaults: {
+    name: '',
+  },
+  addApiUrl: '/api/attribute/add',
+  updateApiUrl: '/api/attribute/update',
+  deleteApiUrl: '/api/attribute/delete',
 })
 
+const handleAdd = () => {
+  resetForm()
+  openDialog()
+}
+const handleEdit = (index, row) => {
+  resetForm()
+  setFormData(row)
+  openDialog()
+}
+
+const handleConfirm = async () => {
+  try {
+    await doSubmit()
+    ElMessage.success('操作成功')
+    closeDialog() // 关闭对话框
+    refreshPage() // 刷新页面数据
+  } catch (error) {
+    ElMessage.error('操作失败', error)
+  }
+}
+
+const status2 = reactive({
+  dialogVisibleValueList: false,
+})
 const handleClickViewOrderDetail = (index, row) => {
-  status.currentIndex = index
-  status.dialogVisibleValueList = true
+  status2.currentIndex = index
+  status2.dialogVisibleValueList = true
 }
 </script>
 
@@ -99,6 +141,22 @@ const handleClickViewOrderDetail = (index, row) => {
   .footer {
     margin-top: 10px;
     text-align: center;
+  }
+}
+
+.top-left-container {
+  display: flex;
+  align-items: center;
+}
+
+.top-right-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+
+  .el-input {
+    width: 360px;
   }
 }
 </style>
