@@ -64,7 +64,7 @@ import theme from '@/config/theme'
 import ajax from '@/utils/request'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router'
-import AddSystemUserDialog from '@/views/system/components/AddSystemUserDialog.vue'
+import AddSystemUserDialog from '@/views/user/components/AddUserDialog.vue'
 import { useUserInfoStore } from '@/stores/global.js'
 
 const { layoutSetting } = useLayoutStore()

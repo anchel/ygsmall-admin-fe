@@ -19,6 +19,11 @@
 
         <el-table stripe table-layout="auto" size="small" :data="listData.list" v-loading="listStatus.loading">
           <el-table-column prop="id" label="ID" />
+          <el-table-column prop="attribute" label="属性">
+            <template #default="{ row }">
+              {{ row.attribute ? row.attribute.name : '未设置' }}
+            </template>
+          </el-table-column>
           <el-table-column prop="value" label="属性值" />
 
           <el-table-column fixed="right" label="操作" width="150">

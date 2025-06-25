@@ -16,6 +16,9 @@ import AfterSalesAllList from '@/views/order-after-sales/AllList/AllList.vue'
 import CategoryList from '@/views/cat_and_attr/Category/CategoryList.vue'
 import AttributeList from '@/views/cat_and_attr/Attribute/AttributeList.vue'
 
+import ProductList from '@/views/product/ProductList/ProductList.vue'
+import ProductDetail from '@/views/product/ProductDetail/ProductDetail.vue'
+
 const Components = Object.assign({}, components, {
   Layout: () => import('@/components/layout/index.vue'),
   LayoutSystem: () => import('@/components/layout/layout-system.vue'),
@@ -134,6 +137,28 @@ export const allowRouter = [
         path: '/cat_and_attr/attribute/list',
         component: AttributeList,
         meta: { title: '属性列表', icon: 'el-icon-sell' },
+      },
+    ],
+  },
+
+  {
+    name: 'ProductRoot',
+    path: '/product',
+    component: Components['Layout'],
+    redirect: '/product/list',
+    meta: { title: '商品管理', icon: 'el-icon-Goods' },
+    children: [
+      {
+        name: 'ProductList',
+        path: '/product/list',
+        component: ProductList,
+        meta: { title: '商品列表', icon: 'el-icon-sell' },
+      },
+      {
+        name: 'ProductDetail',
+        path: '/product/detail',
+        component: ProductDetail,
+        meta: { title: '商品信息', icon: 'el-icon-sell', hidden: true },
       },
     ],
   },
